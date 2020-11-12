@@ -12,7 +12,7 @@ pub struct Comic{
 impl Comic {
     pub async fn date(series:&str, date:&str) -> Result<Comic, Error>{
 
-        //TODO: parse date stuff
+        // TODO: do date stuff
         let discrim = match date.contains("-") {
             true => "-",
             false => "/",
@@ -32,8 +32,10 @@ impl Comic {
         let text = &resp.text().await?;
 
         lazy_static! {
+            // stolen from https://git.sr.ht/~erk/lasagna/tree/master/src/comic.rs#L245
             static ref RE: Regex = Regex::new(r#"<meta property="og:image" content="https://assets\.amuniversal\.com/([^"]+)"\s*/>"#).unwrap();
         }
+        // TODO: not use unwrap
         let cap = RE.captures(&text).unwrap().get(1).unwrap().as_str();
 
         let comic = Comic{
